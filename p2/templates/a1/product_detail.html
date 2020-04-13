@@ -1,0 +1,98 @@
+{% extends "a1/base.html" %}
+{% load bootstrap3 %}
+{% block head %}
+{% load static %}
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+<link rel="stylesheet" href="{%static 'css/product_detail.css'%}">
+{% endblock %}
+{% block content %}
+{%if form.errors%}
+<div class="alert alert-warning" role="alert">
+    {{form.errors}}
+  </div>
+  {%endif%}
+<!-- <div class="container">
+    <br>
+    <br>
+<h3>{{product.name}}</h3><br>
+
+<img src="{{product.image.url}}" alt="image not displayed" height='250' width="250">
+<div class="container">
+<strong> Price:- Rs {{product.price}}</strong><br>
+{{product.description}}
+
+</div>
+<a href="{%url 'a1:createcart' pk=product.pk %}" class="btn btn-primary" >Add to Cart</a>
+</div> -->
+<div class="container">
+    <div class="card">
+        <div class="container-fliud">
+            <div class="wrapper row">
+                <div class="preview col-md-6">
+                    
+                    <div class="preview-pic tab-content" >
+                      <div class="tab-pane active" id="pic-1"><img src="{{product.image.url}}" height="300" width="400" /></div>
+                      <div class="tab-pane" id="pic-2"><img src="{{product.image.url}}" height="300" width="400" /></div>
+                      <div class="tab-pane" id="pic-3"><img src="{{product.image.url}}" height="300" width="400" /></div>
+                      <div class="tab-pane" id="pic-4"><img src="{{product.image.url}}" height="300" width="400" /></div>
+                      <div class="tab-pane" id="pic-5"><img src="{{product.image.url}}" height="300" width="400" /></div>
+                    </div>
+                    <ul class="preview-thumbnail nav nav-tabs">
+                      <li class="active"><a data-target="#pic-1" data-toggle="tab"><img src="{{product.image.url}}" height="100" width="200" /></a></li>
+                      <li><a data-target="#pic-2" data-toggle="tab"><img src="{{product.image.url}}" height="100" width="200" /></a></li>
+                      <li><a data-target="#pic-3" data-toggle="tab"><img src="{{product.image.url}}" height="100" width="200" /></a></li>
+                      <li><a data-target="#pic-4" data-toggle="tab"><img src="{{product.image.url}}" height="100" width="200" /></a></li>
+                      <li><a data-target="#pic-5" data-toggle="tab"><img src="{{product.image.url}}" height="100" width="200" /></a></li>
+                    </ul>
+                    
+                </div>
+                <div class="details col-md-6">
+                    <h3 class="product-title">{{product.name}}</h3>
+                    <div class="rating">
+                        <div class="stars">
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                        </div>
+                        <span class="review-no">41 reviews</span>
+                    </div>
+                    <p class="product-description">{{product.description}}</p>
+                    <h4 class="price">current price: <span>Rs {{product.price}}</span></h4>
+                    <p class="vote"><strong>91%</strong> of buyers enjoyed this product! <strong>(87 votes)</strong></p>
+                    <h5 class="sizes">sizes:
+                        <span class="size" data-toggle="tooltip" title="small">s</span>
+                        <span class="size" data-toggle="tooltip" title="medium">m</span>
+                        <span class="size" data-toggle="tooltip" title="large">l</span>
+                        <span class="size" data-toggle="tooltip" title="xtra large">xl</span>
+                    </h5>
+                    <h5 class="colors">colors:
+                        <span class="color orange not-available" data-toggle="tooltip" title="Not In store"></span>
+                        <span class="color green"></span>
+                        <span class="color blue"></span>
+                    </h5>
+                    <div class="action">
+                        <a href="{%url 'a1:createcart' pk=product.pk %}" class="add-to-cart btn btn-default" type="button">add to cart</a>
+                        <button class="like btn btn-default" type="button"><span class="fa fa-heart"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<a class="btn btn-primary" href="{%url 'a1:add_review' pk=product.pk%}">Add review</a>
+<hr>
+<div class="container">
+    
+<h1>Reviews:</h1>
+{%for review in product.reviews.all%}
+<h4>{{review.user}}</h4> 
+{{review.rev}}<br>
+{{review.experience}}<br>
+
+{% endfor %}
+</div>
+
+
+{% endblock %}

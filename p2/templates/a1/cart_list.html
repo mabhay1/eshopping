@@ -1,0 +1,130 @@
+{% extends "a1/base.html" %}
+
+{% block content %}
+
+<div class="container">
+     <!-- <br>
+     {%if qty > 0 %}
+     cart contains {{qty}} items
+     total price-{{price_total}}
+     
+     <a href="{% url 'a1:placeorder' %}" class='btn btn-primary'>Place Order</a>
+     {% else %}
+     <h3>The Cart is Empty</h3>
+     {%endif%}
+
+    {%for cart in cart_list %}
+    <div class="jumbotron">
+    <h3>{{cart.product.name}}</h3>
+    <img src="{{cart.product.image.url}}" height="200" width="200">
+    
+    <form method='post' action="{% url 'a1:updatecart' pk=cart.pk %}">
+    {% csrf_token %}    
+    <input type="number" min="0" name='qty' placeholder=" enter quantity">
+    <input type="Submit" value="update" class="btn btn-warning">
+    </form>
+    <br>
+    total price= {{cart.total_price}}
+    quantity-{{cart.quantity}}
+       
+    <a href="{% url 'a1:deletecartitem' pk=cart.pk %}" class="btn btn-danger">Delete</a>
+
+    </div>
+    <br><br>
+    {% endfor %} -->
+    <section class="jumbotron text-center">
+        <div class="container">
+            <h1 class="jumbotron-heading">E-COMMERCE CART</h1>
+         </div>
+    </section>
+    {%if qty > 0 %}
+    <H2>cart contains {{qty}} items
+    total price-{{price_total}}</H2>
+    <a href="{% url 'a1:placeorder' %}" class='btn btn-primary'>Place Order</a>
+    
+    
+  
+    
+    <div class="container mb-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col"> </th>
+                                <th scope="col">Product</th>
+                                <!-- <th scope="col">Available</th> -->
+                                <th scope="col" class="text-center">Quantity</th>
+                                <th ></th>
+                                <th scope="col" class="text-right">Price</th>
+                                
+                                <th> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {%for cart in cart_list %}
+                            <tr>
+                                <td><img src="{{cart.product.image.url}}" height="50" width="50" /> </td>
+                                <td>{{cart.product.name}}</td>
+                                <td>
+                                    <form method='post' action="{% url 'a1:updatecart' pk=cart.pk %}" id="myForm">
+                                        {% csrf_token %}    
+                                        <input type="number" min="1" name='qty' class="form-control" value="{{cart.quantity}}">
+                                        <!-- <input type="Submit" value="update" class="btn btn-warning"> -->
+                                    
+                                        
+                                </td>
+                                <!-- <td><input class="form-control" type="text" value="1" /></td> -->
+                                <td class="text-right">
+                                    <button type="submit" class="btn btn-sm btn-warning" id="myButton">
+                                    <i class="fa fa-shopping-cart"></i> 
+                                </button> 
+                            </form>
+                                </td>
+                                <td class="text-right">Rs {{cart.total_price}}</td>
+                                
+                                <td class="text-right"><a href="{% url 'a1:deletecartitem' pk=cart.pk %}" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </a> </td>
+                            </tr>
+                            {%endfor%}
+                    
+                         
+                      
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><strong>Total</strong></td>
+                                <td class="text-right"><strong>Rs {{price_total}}</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col mb-2">
+                <div class="row">
+                    <div class="col-sm-12  col-md-6">
+                        <button class="btn btn-block btn-light">Continue Shopping</button>
+                    </div>
+                    {% if status == "create" %}
+                    <div class="col-sm-12 col-md-6 text-right">
+                        <a href="{% url 'a1:checkout'%}" class="btn btn-lg btn-block btn-success text-uppercase">Checkout</a>
+                    </div>
+                    {% elif status == "update" %}
+                    <div class="col-sm-12 col-md-6 text-right">
+                        <a  href="{% url 'a1:update_checkout' pk=ch.pk %}" class="btn btn-lg btn-block btn-success text-uppercase">Checkout</a>
+                    </div>
+                    {%endif%}
+                </div>
+            </div>
+        </div>
+    </div>
+       
+
+</div>
+{% else %}
+<h3>The Cart is Empty</h3>
+{%endif%}
+
+{% endblock %}

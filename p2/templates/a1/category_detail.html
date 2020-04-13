@@ -1,0 +1,78 @@
+{% extends "a1/base.html" %}
+
+{% block head %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/category.css' %}">
+{% endblock %}
+{% block content %}
+<!-- <div class="container">
+<div class="col-md-12">
+    <h1>{{category.name}}</h1>
+    {%for product in category.products.all%}
+
+    <a href="{% url 'a1:prod_detail' pk=product.pk %}">
+    <img src="{{product.image.url}}" alt="image not displayed" height="300" width="300">
+    {{product.name}}:-  Rs{{product.price}}
+    </a>
+    
+    {%endfor%}
+    
+
+</div>
+</div> -->
+<section class="jumbotron text-center">
+    <div class="container">
+        <h1 class="jumbotron-heading">{{category.name}}</h1>
+        <p class="lead text-muted mb-0">Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500, quand un peintre anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen de polices de texte...</p>
+    </div>
+</section>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{category.name}}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+ <div class="container">
+    <div class="row">
+                      
+        
+        <div class="col">
+            <div class="row">
+                {%for product in category.products.all%}
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card" >
+                        <center><img class="card-img-top" src="{{product.image.url}}" alt="Card image cap" height="200" style="padding: 20px; width: 200px;" ></center>
+                        <div class="card-body">
+                            <h4 class="card-title"><a href="{% url 'a1:prod_detail' pk=product.pk %}" title="View Product">{{product.name}}</a></h4>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="{% url 'a1:prod_detail' pk=product.pk %}" class="btn btn-danger btn-block">Rs{{product.price}}</a>
+                                </div>
+                                <div class="col">
+                                    <a href="{%url 'a1:createcart' pk=product.pk %}" class="btn btn-success btn-block">Add to cart</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {%endfor%}
+     
+           
+
+       
+              
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}

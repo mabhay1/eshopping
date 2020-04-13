@@ -1,0 +1,20 @@
+{% extends "a1/base.html" %}
+
+{% block content %}
+<div class="container">
+<h3>{{order.product.name}}</h3>
+<img src="{{order.product.image.url}}" height="200" width="200" ><br>
+order id={{order.id}}<br>
+order date={{order.order_date}}<br>
+address={{order.user.address}}<br>
+<b>total price= {{order.total_price}}<br></b>
+quantity-{{order.quantity}}<br>
+<hr>
+
+{% for orderdet in order.orders.all%}
+<b>{{orderdet.updates_date}}:-    {{orderdet.updates}}</b><br>
+{{orderdet.update_description}}<br>
+
+{% endfor%}
+</div>
+{% endblock %}
