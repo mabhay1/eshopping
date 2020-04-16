@@ -17,7 +17,7 @@ class UserProfile(User):
     def get_absolute_url(self):
         return reverse('a1:profile',kwargs={'pk':self.pk})     
 
-
+    
 
 
 

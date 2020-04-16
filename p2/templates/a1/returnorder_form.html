@@ -6,13 +6,60 @@
     {{form.errors}}
   </div>
   {%endif%}
+
+<div class="jumbotron">
+    <center><h1>Return Order </h1></center>
+ </div>
+ <div class="container mb-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Order Id </th>
+                            <th></th>
+                            <th scope="col">Product</th>
+                            
+                            <th scope="col" class="text-center">Quantity</th>
+                            <th scope="col" class="text-right">Price</th>
+                            
+                            <th> </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    
+                        <tr>
+                            <td>{{order.id}}</td>
+                            <td><img src="{{order.product.image.url}}" height="50" width="50" /> </td>
+                            <td>{{order.product.name}}</td>
+                            
+                            
+                            <td><center>{{order.quantity}}</center></td>
+                        
+                       
+                            <td class="text-right">Rs {{order.total_price}}</td>
+                            
+                        
+                        </tr>
+                        
+                
+                     
+                  
+                    
+                    </tbody>
+                </table>
+            </div>
+        </div>
 <div class="container">
     <form method="post">
         {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit" value="submit">
+        <label for="id_reason">Why do you cancel this product</label>
+        {% render_field form.reason class="form-control"  %}
+        <input type="submit" class="btn btn-danger" value="Return Order">
     </form>
 </div>
+    </div>
 
 
 

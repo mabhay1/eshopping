@@ -12,6 +12,12 @@ class SignUpForm(UserCreationForm):
         widget=PhoneNumberPrefixWidget(),
         initial='+91'
     )
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        username = self.cleaned_data.get('username')
+        if email and UserProfile.objects.filter(email=email).exclude(username=username).exists():
+            raise forms.ValidationError(u'this email is already taken use different email')
+        return email
 
 
 

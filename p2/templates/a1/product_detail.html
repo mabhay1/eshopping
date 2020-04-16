@@ -1,5 +1,4 @@
 {% extends "a1/base.html" %}
-{% load bootstrap3 %}
 {% block head %}
 {% load static %}
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
@@ -81,10 +80,13 @@
         </div>
     </div>
 </div>
-<a class="btn btn-primary" href="{%url 'a1:add_review' pk=product.pk%}">Add review</a>
+<center><a class="btn btn-primary" href="{%url 'a1:add_review' pk=product.pk%}">Add review</a></center>
 <hr>
 <div class="container">
-    
+<div class="row">
+ <div class="col-md-7 jumbotron"> 
+
+{% if product.reviews.all %}
 <h1>Reviews:</h1>
 {%for review in product.reviews.all%}
 <h4>{{review.user}}</h4> 
@@ -92,6 +94,15 @@
 {{review.experience}}<br>
 
 {% endfor %}
+{% else%}
+<h1>No reviews given</h1>
+{%endif%}
+ </div>
+ <div class="col-md-1"></div>
+ <div class="col-md-4 jumbotron">
+     {% block add_review %}{% endblock %}
+ </div>
+</div>
 </div>
 
 

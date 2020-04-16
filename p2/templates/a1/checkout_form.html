@@ -1,16 +1,149 @@
 {% extends "a1/base.html" %}
 {% load widget_tweaks %}
+{% block head%}
+{% load static%}
+
+<link rel="stylesheet" href="{%static 'css/checkout.css'%}">
+{%endblock%}
+
 {% block content %}
 {%if form.errors%}
 <div class="alert alert-warning" role="alert">
    {{form.errors}}
  </div>
  {%endif%}
- <div class="container">
- <form method="post">
-   {% csrf_token %}
-   {{form.as_p}}
-   <input type="submit" value="submit">
- </form>
- </div>
+
+ <div class="row">
+    <div class="col-75">
+      <div class="container cont1">
+        <form method="post">
+           {% csrf_token %}
+          <div class="row">
+            <div class="col-50">
+              <h3>Billing Address</h3>
+ 
+              <div style="margin-top:110px ;">
+              <label for="id_address"><img style="height: 20px;" src="{% static 'address.svg'%}"/>Address</label>
+              
+              
+              {% render_field form.address  placeholder="542 W. 15th Street" %}
+              <label for="id_city"><i class="fa fa-institution"></i> City</label>
+              
+              {% render_field form.city  placeholder="New Delhi" %}
+              <div class="row">
+                <div class="col-50">
+                  <label for="id_state">State</label>
+                  <!-- <input type="text" id="state" name="state" placeholder="NY"> -->
+                  {% render_field form.state  placeholder="NY" %}
+                </div>
+                <div class="col-50">
+                  <label for="id_zipcode">Zip</label>
+                  <!-- <input type="text" id="zip" name="zip" placeholder="10001"> -->
+                  {% render_field form.zipcode  placeholder="10001" %}
+                </div>
+              </div>
+            </div>
+            </div>
+  
+            <div class="col-50">
+              <h3>Payment</h3>
+              <label for="fname">Accepted Cards</label>
+              <div class="icon-container">
+                <img style="height: 30px;" src="{% static 'visa.png'%}"/>
+              
+                <img style="height: 30px;" src="{% static 'Mastercard.svg'%}"/>
+           
+              </div>
+              <label for="id_name_on_card">Name on Card</label>
+              <!-- <input type="text" id="cname" name="cardname" placeholder="John More Doe"> -->
+              {% render_field form.name_on_card placeholder="John More Doe" %}
+              <label for="id_credit_card_no">Credit card number</label>
+              <!-- <input type="text" id="ccnum" name="cardnumber" placeholder="1111-2222-3333-4444"> -->
+              {% render_field form.credit_card_no  placeholder="1111-2222-3333-4444" %}
+              <label for="id_ex_month">Exp Month</label>
+              <!-- <input type="text" id="expmonth" name="expmonth" placeholder="September"> -->
+              {% render_field form.ex_month  placeholder="September" %}
+  
+              <div class="row">
+                <div class="col-50">
+                  <label for="id_ex_year">Exp Year</label>
+                  <!-- <input type="text" id="expyear" name="expyear" placeholder="2018"> -->
+                  {% render_field form.ex_year  placeholder="2018" %}
+                </div>
+                <div class="col-50">
+                  <label for="id_cvv">CVV</label>
+                  <!-- <input type="text" id="cvv" name="cvv" placeholder="352"> -->
+                  {% render_field form.cvv  placeholder="352" %}
+                </div>
+              </div>
+            </div>
+  
+          </div>
+
+          <input type="submit" value="Place Order" class="btn">
+        </form>
+      </div>
+    </div>
+  
+    <div class="col-25">
+      <div class="container cont1">
+        <h4>Cart
+          <span class="price" style="color:black">
+            <i class="fa fa-shopping-cart"></i>
+            <b>{{qty}}</b>
+          </span>
+        </h4>
+        {% for i in cart %}
+        <p><img src="{{i.product.image.url}}"style="height:40px">{{i.product.name}} <span style="background:yellow; border-radius: 50%;">{{i.quantity}}</span> <span class="price">Rs{{i.total_price}}</span></p>
+        {%endfor%}
+        <hr>
+        <p>Total <span class="price" style="color:black"><b>Rs{{price_total}}</b></span></p>
+      </div>
+    </div>
+  </div>
+ <!-- <div class="container">
+ <form>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="Email" class="col-form-label">Email</label>
+        <input type="email" class="form-control" id="Email" placeholder="Email">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="Password" class="col-form-label">Password</label>
+        <input type="password" class="form-control" id="Password" placeholder="Password">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="Address" class="col-form-label">Address</label>
+      <input type="text" class="form-control" id="Address" placeholder="Address First Line">
+    </div>
+    <div class="form-group">
+      <label for="Address1" class="col-form-label">Address 2</label>
+      <input type="text" class="form-control" id="Address1" placeholder="Address Second Line">
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="City" class="col-form-label">City</label>
+        <input type="text" class="form-control" id="City" placeholder="City">
+      </div>
+      <div class="form-group col-md-4">
+        <label for="State" class="col-form-label">State</label>
+        <select id="State" class="form-control">Choose</select>
+      </div>
+      <div class="form-group col-md-2">
+        <label for="Zip" class="col-form-label">Zip</label>
+        <input type="text" class="form-control" id="Zip">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-check">
+        <label class="form-check-label">
+          <input class="form-check-input" type="checkbox"> Remember me
+        </label>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+ </div> -->
+
 {% endblock %}  

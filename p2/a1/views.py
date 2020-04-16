@@ -29,7 +29,8 @@ class SignUpView(SuccessMessageMixin,CreateView):
     success_url=reverse_lazy('login')
     success_message = "you are registered"
 
-class ViewProfile(DetailView):
+class ViewProfile(LoginRequiredMixin,DetailView):
+    login_url='login'
     model=UserProfile
     template_name="a1/view_profile.html" 
     context_object_name="userprofile" 
@@ -42,6 +43,7 @@ class LoginFormView(SuccessMessageMixin,LoginView):
 
 
 class LogoutFormView(LogoutView):
+    
     def dispatch(self, request, *args, **kwargs):
         response = super().dispatch(request, *args, **kwargs)
         messages.add_message(request, messages.INFO, 'Successfully logged out.')
@@ -49,8 +51,8 @@ class LogoutFormView(LogoutView):
         
 
 
-class UpdateProfile(SuccessMessageMixin,UpdateView):
-    
+class UpdateProfile(LoginRequiredMixin,SuccessMessageMixin,UpdateView):
+    login_url='login'
     template_name="a1/update_profile.html"
     model=UserProfile 
     form_class=UpdateForm
@@ -75,14 +77,21 @@ class CreateCart(LoginRequiredMixin,RedirectView):
         var1=CartVariable.objects.get_or_create(user_id=user_profile.user_ptr_id)[0]
         product=get_object_or_404(Product,pk=self.kwargs.get('pk'))
         
-        if var1.a!=product.name:
-            Cart.objects.create(user=user_profile,product=product,total_price=product.price)
-            messages.success(self.request,' one quantity of product is added to cart go to cart to add more quantity ')
-            var1.total_qty=var1.total_qty+1
-            var1.total_price=var1.total_price+product.price
+        if product.id in list(map(lambda x:x.product_id,Cart.objects.filter(user_id=user_profile.user_ptr_id,product=product))):
+            c=Cart.objects.get(user_id=user_profile.user_ptr_id,product=product)
+            c.quantity=c.quantity+1
+            c.total_price=c.total_price+product.price
+            c.save()
+ 
            
-        var1.a=product.name
+     
+        else:
+            c=Cart.objects.create(user_id=user_profile.user_ptr_id,product=product,total_price=product.price)
+        var1.total_qty=var1.total_qty+1
+        var1.total_price=var1.total_price+product.price
         var1.save()
+        messages.success(self.request,f' {c.quantity} quantity of {product.name} is added to cart ')
+            
         return super().get(request,*args,**kwargs)
 
 class DisplayCart(LoginRequiredMixin,ListView):
@@ -210,11 +219,13 @@ class YourOrder(LoginRequiredMixin,ListView):
         context['ret_list']=ret_list         
         return context    
 
-class OrderDetail(DetailView):
+class OrderDetail(LoginRequiredMixin,DetailView):
+    login_url='login'
     model=Order
     template_name='a1/order_detail.html'        
     
-class ReviewView(SuccessMessageMixin,CreateView):
+class ReviewView(LoginRequiredMixin,SuccessMessageMixin,CreateView):
+    login_url='login'
     model=Review
     form_class=ReviewForm
     success_message = "thanks for your review your review is added"
@@ -258,8 +269,13 @@ class ReviewView(SuccessMessageMixin,CreateView):
         else:
             messages.warning(self.request,'you have not purchased this product')
             return HttpResponseRedirect(reverse("a1:prod_detail",kwargs={'pk':self.kwargs.get('pk')}))
+    def get_context_data(self,**kwargs):
+        context=super().get_context_data(**kwargs)
         
-class CheckoutCreateView(CreateView):
+        context['product']=Product.objects.get(id=self.kwargs.get('pk'))
+        return context     
+class CheckoutCreateView(LoginRequiredMixin,CreateView):
+    login_url='login'
     model=Checkout
     fields=['address','city','state','zipcode','name_on_card','credit_card_no','ex_month','ex_year','cvv']
     def form_valid(self,form):
@@ -267,23 +283,46 @@ class CheckoutCreateView(CreateView):
         user_profile=UserProfile.objects.get(username=self.request.user.username)
         self.object.user_id = user_profile.user_ptr_id
         return super().form_valid(form) 
-
+    def get_context_data(self,**kwargs):
+        context=super().get_context_data(**kwargs)
+        user_profile=UserProfile.objects.get(username=self.request.user.username)
+        cart4=CartVariable.objects.get(user_id=user_profile.user_ptr_id)
+        
+        context['price_total']=cart4.total_price
+        context['cart']=Cart.objects.filter(user_id=user_profile.user_ptr_id)
+        return context 
     
-class UpdateCheckout(UpdateView):
+class UpdateCheckout(LoginRequiredMixin,UpdateView):
+    login_url='login'
     model=Checkout
     fields=['address','city','state','zipcode','name_on_card','credit_card_no','ex_month','ex_year','cvv']
+    def get_context_data(self,**kwargs):
+        context=super().get_context_data(**kwargs)
+        user_profile=UserProfile.objects.get(username=self.request.user.username)
+        cart4=CartVariable.objects.get(user_id=user_profile.user_ptr_id)
+        
+        context['price_total']=cart4.total_price
+        context['cart']=Cart.objects.filter(user_id=user_profile.user_ptr_id)
+        return context
     
 
-class CancelOrderView(SuccessMessageMixin,CreateView):
+class CancelOrderView(LoginRequiredMixin,SuccessMessageMixin,CreateView):
+    login_url='login'
     model=CancelOrder
     fields=['reason']
     success_message = "your order is canceled"
     def form_valid(self,form):
         self.object = form.save(commit=False)
         self.object.order_id=self.kwargs.get('pk')
-        return super().form_valid(form)    
+        return super().form_valid(form) 
 
-class ReturnOrderView(SuccessMessageMixin,CreateView):
+    def get_context_data(self,**kwargs):
+        context=super().get_context_data(**kwargs)
+        context['order']=Order.objects.get(id=self.kwargs.get('pk'))
+        return context       
+
+class ReturnOrderView(LoginRequiredMixin,SuccessMessageMixin,CreateView):
+    login_url='login'
     model=ReturnOrder
     fields=['reason']
     success_message = "your order is returned"
@@ -291,5 +330,10 @@ class ReturnOrderView(SuccessMessageMixin,CreateView):
         self.object = form.save(commit=False)
         self.object.order_id=self.kwargs.get('pk')
         return super().form_valid(form)  
+
+    def get_context_data(self,**kwargs):
+        context=super().get_context_data(**kwargs)
+        context['order']=Order.objects.get(id=self.kwargs.get('pk'))
+        return context     
 
          

@@ -1,6 +1,9 @@
 {% extends "a1/base.html" %}
-
-
+{% load widget_tweaks %}
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
 {% block content %}
 {%if form.errors%}
 <div class="alert alert-warning" role="alert">
@@ -9,23 +12,230 @@
   {%endif%}
 <div class="container">
     {% if not hide_update%}
-    <strong>Username</strong>: - {{userprofile.username}}<br> 
+    <!-- <strong>Username</strong>: - {{userprofile.username}}<br> 
     <strong>First Name</strong>: - {{userprofile.first_name}}<br>
     <strong>Last Name</strong>: - {{userprofile.last_name}}<br>
     <strong>Phone Number</strong>: - {{userprofile.phone_number}}<br>
-    <strong>address</strong>: - {{userprofile.address}}<br>
     
     
-    <a href="{% url 'a1:update_profile' pk=userprofile.pk %}" class="btn btn-warning">Edit Profile</a>
+    
+    <a href="{% url 'a1:update_profile' pk=userprofile.pk %}" class="btn btn-warning">Edit Profile</a> -->
+    <div class="container emp-profile">
+        
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="profile-img">
+                        <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" style="border-radius: 50%;" alt="avatar">
+                    
+                        
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="profile-head">
+                                <h1>
+                                    {{userprofile.first_name}} {{userprofile.last_name}}
+                                </h1>
+    
+                                
+                        <!-- <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-top: 50px;">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Timeline</a>
+                            </li>
+                        </ul> -->
+                    </div>
+                </div>
+                <div class="col-md-2">
+                
+                    <a href="{% url 'a1:update_profile' pk=userprofile.pk %}" class="btn btn-warning">Edit Profile</a> 
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="profile-work">
+                        <a  href="{% url 'a1:displaycart' %}"> 
+                            <div id="ex4">
+                
+                                <span class="p1 fa-stack fa-2x has-badge" data-count="{{qty}}">
+                                  
+                                  <i class="p3 fa fa-shopping-cart fa-stack-1x xfa-inverse" data-count="{{qty}}" ></i>
+                                
+                  
+                                </span>
+                                Your Cart
+                              </div>
+                              </a> 
+                        <a class="nav-link" href="{% url 'a1:yourorder' %}">Your Orders</a>
+                        <!-- <p>WORK LINK</p> -->
+                        <!-- <a href="">Website Link</a><br/>
+                        <a href="">Bootsnipp Profile</a><br/>
+                        <a href="">Bootply Profile</a>
+                        <p>SKILLS</p>
+                        <a href="">Web Designer</a><br/>
+                        <a href="">Web Developer</a><br/>
+                        <a href="">WordPress</a><br/>
+                        <a href="">WooCommerce</a><br/>
+                        <a href="">PHP, .Net</a><br/> -->
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="tab-content profile-tab" id="myTabContent">
+                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>User Name</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p>{{userprofile.username}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>First Name</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p>{{userprofile.first_name}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>Last Name</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p>{{userprofile.last_name}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>Email</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p>{{userprofile.email}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>Phone</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p>{{userprofile.phone_number}}</p>
+                                        </div>
+                                    </div>
+                                  
+                        </div>
+                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>Experience</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p>Expert</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>Hourly Rate</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p>10$/hr</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>Total Projects</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p>230</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>English Level</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p>Expert</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>Availability</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p>6 months</p>
+                                        </div>
+                                    </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Your Bio</label><br/>
+                                    <p>Your detail description</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                  
+    </div>
     {%endif%}
 {% if hide_update%}
-    <form method="post" >
-        {%csrf_token%}
-        {{form.as_p}}
-        <input type="submit" value="Edit">
-    </form>
+ 
+    <div class="container">
+        <div class="card bg-light">
+        <article class="card-body mx-auto" style="max-width: 400px;">
+            <h4 class="card-title mt-3 text-center">Update Details</h4>
+            
+          
+            <form method="post">
+                {% csrf_token %}
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                 </div>
+                
+                {% render_field form.username class="form-control" placeholder="Enter username" %}
+            </div> <!-- form-group// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                 </div>
+               
+                {% render_field form.first_name class="form-control" placeholder="Enter first name" %}
+            </div>
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                 </div>
+                
+                {% render_field form.last_name class="form-control" placeholder="Enter last name" %}
+            </div>
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                 </div>
+                
+                {% render_field form.email class="form-control" placeholder="Enter email" %}
+            </div> <!-- form-group// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-phone"></i> </span>
+                </div>
+     
+                {% render_field form.phone_number class="form-control" placeholder="Enter phone number" %}
+            </div> <!-- form-group// -->
+      
+             
+                                             
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-block"> Update  </button>
+            </div> <!-- form-group// -->      
+                                                                      
+        </form>
 
 {%endif%}
 
+</div>
 </div>
 {%endblock%}
