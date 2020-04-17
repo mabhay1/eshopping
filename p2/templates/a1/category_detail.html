@@ -55,6 +55,7 @@
                                 <div class="col">
                                     <a href="{% url 'a1:prod_detail' pk=product.pk %}" class="btn btn-danger btn-block">Rs{{product.price}}</a>
                                 </div>
+                                <h5>Seller</h5>:- {{product.user.business.name}}
                                 <div class="col">
                                     <a href="{%url 'a1:createcart' pk=product.pk %}" class="btn btn-success btn-block">Add to cart</a>
                                 </div>

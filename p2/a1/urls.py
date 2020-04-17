@@ -25,6 +25,13 @@ urlpatterns = [
     path('update/<int:pk>',views.UpdateCheckout.as_view(),name='update_checkout'),
     path('cancelorder/<int:pk>',views.CancelOrderView.as_view(),name="cancelorder"),
     path('returnorder/<int:pk>',views.ReturnOrderView.as_view(),name="returnorder"),
+    path('seller',views.SellerIndex.as_view(),name="sellerindex"),
+
+    path('business_detail',views.BusinessCreateView.as_view(),name="business_detail"),
+    path('bank_detail',views.BankDetailCreateView.as_view(),name="bank_detail"),
+    path('prod_create',views.ProductCreateView.as_view(),name="prod_create"),
+    path('cat_create',views.CategoryCreateView.as_view(),name="cat_create"),
+
 
 
 ]

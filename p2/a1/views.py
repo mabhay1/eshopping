@@ -1,8 +1,8 @@
 from django.shortcuts import render,redirect
 from django.views.generic import TemplateView,CreateView,ListView,DetailView,RedirectView,UpdateView,DeleteView
-from .forms import SignUpForm,UpdateForm,ReviewForm
+from .forms import SignUpForm,UpdateForm,ReviewForm,ProductCreateForm
 from django.urls import reverse_lazy,reverse
-from .models import Category,Product,Cart,CartVariable,Order,UserProfile,Review,Checkout,CancelOrder,ReturnOrder
+from .models import Category,Product,Cart,CartVariable,Order,UserProfile,Review,Checkout,CancelOrder,ReturnOrder,BankDetail,BusinessDetail
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
@@ -12,13 +12,37 @@ from django.http import HttpResponseRedirect
 # Create your views here.
 
 
+class SellerIndex(LoginRequiredMixin,TemplateView):
+    login_url='login'
+    template_name="a1/seller_page.html"   
+    def get(self,request,*args,**kwargs):
+        try:
+            UserProfile.objects.get(username=self.request.user.username)
+        except UserProfile.DoesNotExist:
+            return HttpResponseRedirect(reverse("signup"))  
+        return super().get(request,*args,**kwargs)
+    def get_context_data(self,**kwargs):
+        context=super().get_context_data(**kwargs)
+        try:
+            userprofile=UserProfile.objects.get(username=self.request.user.username)
+            if userprofile.bank_detail and userprofile.business_detail:
+                if 'seller' not in userprofile.role:
+                    userprofile.role.append('seller')
+                    userprofile.save()
+            context['seller']=userprofile
+        except:
+            pass   
+        return context
 
 class IndexView(ListView):
     model=Category
     template_name='a1/index.html'
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
-        context['products']=Product.objects.all()
+        try:
+            context['products']=Product.objects.all()
+        except:
+            pass    
         return context
     
 
@@ -26,8 +50,41 @@ class IndexView(ListView):
 class SignUpView(SuccessMessageMixin,CreateView):
     form_class=SignUpForm
     template_name='a1/signup.html'
-    success_url=reverse_lazy('login')
+    # success_url=reverse_lazy('login')
     success_message = "you are registered"
+    # def get(self,request,*args,**kwargs):
+
+    #     return super().get(request,*args,**kwargs)
+    def get_success_url(self):
+        return reverse("login")   
+            
+class BankDetailCreateView(SuccessMessageMixin,CreateView):
+    model=BankDetail
+    fields=['adhar_no','pan_no','account_no']
+    success_url=reverse_lazy('a1:sellerindex')
+    success_message = "bank detail is created"
+    def form_valid(self,form):
+        self.object = form.save(commit=False)
+        user_profile=UserProfile.objects.get(username=self.request.user.username)
+        self.object.user_id = user_profile.user_ptr_id
+        user_profile.bank_detail=True
+        user_profile.save()
+        return super().form_valid(form)     
+ 
+class BusinessCreateView(SuccessMessageMixin,CreateView):
+    model=BusinessDetail
+    fields=['name','address','city','state','zip_code']
+    success_url=reverse_lazy('a1:sellerindex')
+    success_message = "business detail is created"
+    def form_valid(self,form):
+        self.object = form.save(commit=False)
+        user_profile=UserProfile.objects.get(username=self.request.user.username)
+        self.object.user_id = user_profile.user_ptr_id
+        user_profile.business_detail=True
+        user_profile.save()
+
+        return super().form_valid(form)     
+   
 
 class ViewProfile(LoginRequiredMixin,DetailView):
     login_url='login'
@@ -39,7 +96,13 @@ class LoginFormView(SuccessMessageMixin,LoginView):
     template_name = 'a1/login.html'
     success_message = "Successfully logged in."
     def get_success_url(self):
-        return reverse('home')  
+        userprofile=UserProfile.objects.get(username=self.request.user.username)
+        if 'seller' in userprofile.role:
+            return reverse('a1:sellerindex')
+        else:
+            return reverse('home')      
+    
+
 
 
 class LogoutFormView(LogoutView):
@@ -58,7 +121,35 @@ class UpdateProfile(LoginRequiredMixin,SuccessMessageMixin,UpdateView):
     form_class=UpdateForm
     success_message = "your profile is updated"
 
-    
+class CategoryCreateView(CreateView):
+    model=Category
+    fields=['name']    
+
+class ProductCreateView(CreateView):
+    model=Product
+    fields=['category','name','image','price','description']
+  
+    def form_valid(self,form):
+        self.object = form.save(commit=False)
+        user_profile=UserProfile.objects.get(username=self.request.user.username)
+        self.object.user_id = user_profile.user_ptr_id
+        if 'image' in self.request.FILES:
+            self.object.image=self.request.FILES['image']
+        return super().form_valid(form) 
+# def add_product(request):
+#     if request.method=='POST':
+#         product_form=ProductCreateForm(data=request.POST)
+        
+#         if product_form.is_valid():
+#             user_profile=UserProfile.objects.get(username=request.user.username)
+#             prod=product_form.save(commit=False)
+#             prod.user_id=user_profile.user_ptr_id
+#             if 'image' in request.FILES:
+#                 prod.image=request.FILES['image']
+#             prod.save()
+#     else:
+#         product_form=ProductCreateForm()
+#     return render(request,'a1/product_form.html',{'form':product_form}) 
 
 class Products(DetailView):
     model=Category

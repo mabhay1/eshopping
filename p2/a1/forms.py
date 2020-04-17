@@ -1,10 +1,14 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
-from .models import UserProfile,Review,OrderUpdates
+from .models import UserProfile,Review,OrderUpdates,Product
 from phonenumber_field.formfields import PhoneNumberField
 from phonenumber_field.widgets import PhoneNumberPrefixWidget
-
+class ProductCreateForm(forms.ModelForm):
+    class Meta():
+        model=Product
+        fields=['category','name','image','price','description']
+        
 
     
 class SignUpForm(UserCreationForm):
@@ -22,7 +26,7 @@ class SignUpForm(UserCreationForm):
 
 
     class Meta:
-        fields=('first_name','last_name','username','phone_number','email','password1','password2')
+        fields=('first_name','last_name','username','phone_number','email','password1','password2','role')
         model=UserProfile
 
 

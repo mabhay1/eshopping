@@ -84,7 +84,9 @@
                 <a class="nav-link" href="{% url 'a1:yourorder' %}">Your Order</a>
               </li>
 
- 
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'a1:sellerindex' %}">Create Seller acount</a>
+              </li>
           </ul>
           {% if user.is_authenticated %}
             <a style='color:rgba(0, 0, 0,0.5);' class="nav-link" href="{% url 'a1:profile' pk=user.pk %}" >

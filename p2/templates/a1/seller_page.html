@@ -1,0 +1,26 @@
+{%extends 'a1/base.html' %}
+
+{% block content %}
+
+{% if seller.business_detail and seller.bank_detail %}
+{%else%}
+<h1>Please fill these details to complete your registeration</h1>
+{%endif%}
+
+{% if not seller.bank_detail %}
+<h3>To fill bank detail</h3>
+<a class="btn btn-danger" href="{% url 'a1:bank_detail'%}">bank_detail</a><br>
+{%endif%}
+
+{% if not seller.business_detail %}
+<h3>To fill business detail</h3>
+<a class="btn btn-danger" href="{% url 'a1:business_detail'%}">business_detail</a><br>
+{%endif%}
+
+{% if seller.bank_detail and seller.business_detail %}
+<a class="btn btn-warning" href="{% url 'a1:cat_create' %}">add category</a><br>
+<a class="btn btn-warning" href="{% url 'a1:prod_create' %}">add product</a><br>
+{% endif %}
+
+{% endblock %}
+
