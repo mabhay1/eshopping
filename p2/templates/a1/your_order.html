@@ -1,67 +1,46 @@
 {% extends "a1/base.html" %}
-{% block head %}
-<style type="text/css">
-.inline{
-    display:inline-block;
-    
-    
-    
-}
-
-</style>
-
-{% endblock %}
 
 {% block content %}
-<div class="container">
-    <br>
-    
 {%if order_list%}
-
-   {%for order in order_list %}
-   <div class="jumbotron">
-   <h3>{{order.product.name}}</h3>
-   
-   <img src="{{order.product.image.url}}" height="200" width="200" class="inline">
-   <div class="inline ">
-       
-   
-   order id={{order.id}}<br>
-   order date={{order.order_date}}<br>
-   address={{order.user.checkouts.address}}<br>
-   <b>total price= {{order.total_price}}<br></b>
-   quantity-{{order.quantity}}<br>
-   
-   {% if order.orders.all.latest.delivered %}
-   Delivered date={{order.orders.all.latest.updates_date}}
-   <p style="color:blue">Delivered</p>
-   {%if order.id in ret_list%}
-   Returned date={{order.returns.return_date}}
-   <p style="color:yellowgreen">Returned</p>
-
-   {%else%}
-   <a href="{% url 'a1:returnorder' pk=order.pk%}" class="btn btn-danger">Return Order</a>
-   {%endif%}
-   {%else%}
-   <p style="color:red">Pending...</p>
-   <a href="{% url 'a1:cancelorder' pk=order.pk%}" class="btn btn-danger">Cancel Order</a>
-   {%endif%}
-
-
-   <b>{{order.orders.all.latest.updates_date}}-  {{order.orders.all.latest.updates}} </b>
-   
-   
+<div class="container" style="padding-top: 20px;">
+    
+    {%for order in order_list %}
+    <div class="row jumbotron" style="height: 150px;padding-top: 0px;">
+        <img src="{{order.product.image.url}}" height="100" width="90" style="margin: 10px;">
+        <div>
+            <h3>{{order.product.name}}</h3>
+            quantity-{{order.quantity}}<br>
+            <b>Seller name</b>:{{order.product.user.business.name}} 
+        </div>
+        <div style="margin: auto;">Rs{{order.total_price}}</div>
+        <div>
+            {% if order.orders.all.latest.delivered %}
+            <p style="color:blue">Delivered on {{order.orders.all.latest.updates_date}}</p>
+            {%if order.id in ret_list%}
+            
+            <p style="color:yellowgreen">Returned on {{order.returns.return_date}}</p>
+         
+            {%else%}
+            <a href="{% url 'a1:returnorder' pk=order.pk%}" class="btn btn-danger">Return Order</a><br>
+            {%endif%}
+            {%else%}
+            <p style="color:red">Pending...</p>
+            <a href="{% url 'a1:cancelorder' pk=order.pk%}" class="btn btn-danger">Cancel Order</a><br>
+            {%endif%}
+         
+         
+            <b>{{order.orders.all.latest.updates_date}}-  {{order.orders.all.latest.updates}} </b><br>
+            <a href="{% url 'a1:order_detail' pk=order.pk%}" class="btn btn-primary">View Order</a>
+            {% if order.orders.all.latest.delivered %}
+            <a href="{%url 'a1:add_review' pk=order.product.pk%}" class="btn btn-warning">Write review</a>
+            {%endif%}
+        </div>
         
-      
-</div>
-<a href="{% url 'a1:order_detail' pk=order.pk%}" class="btn btn-primary">check order updates</a>
-   </div>
-   <br><br>
-   {% endfor %}
-   {%else%}
-   <h3>You have no orders yet</h3>
-   {%endif%}
-
+    </div>
+    {% endfor %}
+    {%else%}
+    <h3>You have no orders yet</h3>
+    {%endif%}    
 </div>
 
 {% endblock %}

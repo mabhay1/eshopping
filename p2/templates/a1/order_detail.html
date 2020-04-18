@@ -6,15 +6,21 @@
 <img src="{{order.product.image.url}}" height="200" width="200" ><br>
 order id={{order.id}}<br>
 order date={{order.order_date}}<br>
-address={{order.user.address}}<br>
+address={{order.user.checkouts.address}}<br>
 <b>total price= {{order.total_price}}<br></b>
 quantity-{{order.quantity}}<br>
+{% if order.orders.all.latest.delivered %}
+Delivered date={{order.orders.all.latest.updates_date}}
+{%endif%}
 <hr>
-
+{% if order.orders.all %}
 {% for orderdet in order.orders.all%}
 <b>{{orderdet.updates_date}}:-    {{orderdet.updates}}</b><br>
 {{orderdet.update_description}}<br>
 
 {% endfor%}
+{% else %}
+<h1> no updates yet</h1>
+{%endif%}
 </div>
 {% endblock %}
