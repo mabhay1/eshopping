@@ -38,14 +38,19 @@
                                 </h1>
     
                                 
-                        <!-- <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-top: 50px;">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-top: 50px;">
                             <li class="nav-item">
-                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
+                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Profile</a>
+                            </li>
+                            {% if 'seller'  in userprofile.role %}
+                            <li class="nav-item">
+                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Business</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Timeline</a>
+                                <a class="nav-link" id="profile1-tab" data-toggle="tab" href="#profile1" role="tab" aria-controls="profile1" aria-selected="false">Bank</a>
                             </li>
-                        </ul> -->
+                            {%endif%}
+                        </ul>
                     </div>
                 </div>
                 <div class="col-md-2">
@@ -69,6 +74,10 @@
                               </div>
                               </a> 
                         <a class="nav-link" href="{% url 'a1:yourorder' %}">Your Orders</a>
+                        {% if 'seller' in userprofile.role%}
+                        <a class="nav-link" href="{% url 'a1:your_products' %}">Your Products</a>
+                        {% endif %}
+
                         <!-- <p>WORK LINK</p> -->
                         <!-- <a href="">Website Link</a><br/>
                         <a href="">Bootsnipp Profile</a><br/>
@@ -124,56 +133,89 @@
                                             <p>{{userprofile.phone_number}}</p>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>Role</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p>{{userprofile.role}}</p>
+                                        </div>
+                                    </div>
                                   
                         </div>
                         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label>Experience</label>
+                                            <label>Business Name</label>
                                         </div>
                                         <div class="col-md-6">
-                                            <p>Expert</p>
+                                            <p>{{userprofile.business.name}}</p>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label>Hourly Rate</label>
+                                            <label>Address</label>
                                         </div>
                                         <div class="col-md-6">
-                                            <p>10$/hr</p>
+                                            <p>{{userprofile.business.address}}</p>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label>Total Projects</label>
+                                            <label>City</label>
                                         </div>
                                         <div class="col-md-6">
-                                            <p>230</p>
+                                            <p>{{userprofile.business.city}}</p>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label>English Level</label>
+                                            <label>State</label>
                                         </div>
                                         <div class="col-md-6">
-                                            <p>Expert</p>
+                                            <p>{{userprofile.business.state}}</p>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label>Availability</label>
+                                            <label>Zip</label>
                                         </div>
                                         <div class="col-md-6">
-                                            <p>6 months</p>
+                                            <p>{{userprofile.business.zip_code}}</p>
                                         </div>
                                     </div>
+                                <a class="btn btn-warning" href="{% url 'a1:businessup' pk=userprofile.business.pk %}">Update</a>
+                         
+                        </div>
+                        <div class="tab-pane fade" id="profile1" role="tabpanel" aria-labelledby="profile1-tab">
                             <div class="row">
-                                <div class="col-md-12">
-                                    <label>Your Bio</label><br/>
-                                    <p>Your detail description</p>
+                                <div class="col-md-6">
+                                    <label>Adhar number</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{userprofile.bank.adhar_no}}</p>
                                 </div>
                             </div>
-                        </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Pan number</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{userprofile.bank.pan_no}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Account number</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{userprofile.bank.account_no}}</p>
+                                </div>
+                            </div>
+                            <a class="btn btn-warning" href="{% url 'a1:bankup' pk=userprofile.bank.pk %}">Update</a>
+                           
+                 
+                </div>
                     </div>
                 </div>
             </div>
@@ -227,7 +269,7 @@
             </div> <!-- form-group// -->
       
              
-                                             
+            {% render_field form.role %}                              
             <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-block"> Update  </button>
             </div> <!-- form-group// -->      

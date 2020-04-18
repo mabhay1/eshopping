@@ -10,7 +10,13 @@ from django.contrib.auth.views import LoginView,LogoutView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
 # Create your views here.
-
+class SellerProducts(LoginRequiredMixin,ListView):
+    model=Product
+    template_name="a1/your_products.html"
+    def get_queryset(self):
+        queryset=super().get_queryset()
+        user_profile=UserProfile.objects.get(username=self.request.user.username)
+        return queryset.filter(user_id=user_profile.user_ptr_id)    
 
 class SellerIndex(LoginRequiredMixin,TemplateView):
     login_url='login'
@@ -69,7 +75,21 @@ class BankDetailCreateView(SuccessMessageMixin,CreateView):
         self.object.user_id = user_profile.user_ptr_id
         user_profile.bank_detail=True
         user_profile.save()
-        return super().form_valid(form)     
+        return super().form_valid(form) 
+    def get_context_data(self,**kwargs):
+        context=super().get_context_data(**kwargs)
+        context['heading']= 'create'
+        return context   
+
+class BankDetailUpdateView(SuccessMessageMixin,UpdateView):
+    model=BankDetail
+    fields=['adhar_no','pan_no','account_no']
+    success_message = "bank detail is updated"
+ 
+    def get_context_data(self,**kwargs):
+        context=super().get_context_data(**kwargs)
+        context['heading']= 'update'
+        return context   
  
 class BusinessCreateView(SuccessMessageMixin,CreateView):
     model=BusinessDetail
@@ -84,8 +104,19 @@ class BusinessCreateView(SuccessMessageMixin,CreateView):
         user_profile.save()
 
         return super().form_valid(form)     
-   
-
+    def get_context_data(self,**kwargs):
+        context=super().get_context_data(**kwargs)
+        context['heading']= 'create'
+        return context   
+class BusinessUpdateView(SuccessMessageMixin,UpdateView):
+    model=BusinessDetail
+    fields=['name','address','city','state','zip_code']
+    success_message = "business detail is updated"
+     
+    def get_context_data(self,**kwargs):
+        context=super().get_context_data(**kwargs)
+        context['heading']= 'update'
+        return context  
 class ViewProfile(LoginRequiredMixin,DetailView):
     login_url='login'
     model=UserProfile

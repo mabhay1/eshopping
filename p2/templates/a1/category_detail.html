@@ -51,11 +51,12 @@
                         <div class="card-body">
                             <h4 class="card-title"><a href="{% url 'a1:prod_detail' pk=product.pk %}" title="View Product">{{product.name}}</a></h4>
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <b>Seller</b>:- {{product.user.business.name}}
                             <div class="row">
                                 <div class="col">
                                     <a href="{% url 'a1:prod_detail' pk=product.pk %}" class="btn btn-danger btn-block">Rs{{product.price}}</a>
                                 </div>
-                                <h5>Seller</h5>:- {{product.user.business.name}}
+                                
                                 <div class="col">
                                     <a href="{%url 'a1:createcart' pk=product.pk %}" class="btn btn-success btn-block">Add to cart</a>
                                 </div>

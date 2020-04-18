@@ -167,53 +167,7 @@ background-color:#FF7600;
   </div>
 
 
-<!-- <div class="container ">
-  <div class="row">
 
-    <div class="col-lg-3">
-    
-      <h1 class="my-4">Shop Name</h1>
-      {%for category in category_list%}
-    
-      <div class="list-group">
-        <a href="{% url 'a1:cat_detail' pk=category.pk %}" class="list-group-item">{{category.name}}</a>
-      </div>
-      {%endfor%}
-    
-    </div> 
-    
-    <div class="col-lg-9">
-{% for category in category_list%}
-<h3>{{category.name}}</h3>
-<div class="row">
-
-  {% for product in category.products.all%}
-  <div class="col-lg-4 col-md-6 mb-4">
-    <div class="card h-100">
-      <a href="{% url 'a1:prod_detail' pk=product.pk %}"><img class="card-img-top" src="{{product.image.url}}" alt="" height="220px" style="padding: 20px;"></a>
-      <div class="card-body">
-        <h4 class="card-title">
-          <a href="{% url 'a1:prod_detail' pk=product.pk %}">{{product.name}}</a>
-        </h4>
-        <h5>Rs{{product.price}}</h5>
-        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!</p>
-      </div>
-      <a href="{%url 'a1:createcart' pk=product.pk %}" class="btn btn-primary" style="width: 130px;">Add to Cart</a>
-      <div class="card-footer">
-        <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-      </div>
-    </div>
-  </div>
-  {%endfor%}
-</div>
-{%endfor%}
-  
-
-    </div>
-
-
-
-</div> -->
 
 <div class="container mt-4">
   <div class="row">
@@ -248,11 +202,12 @@ background-color:#FF7600;
                     <div class="card-body">
                         <h4 class="card-title"><a href="{% url 'a1:prod_detail' pk=product.pk %}" title="View Product">{{product.name}}</a></h4>
                         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <b>Seller</b>:- {{product.user.business.name}}
                         <div class="row">
                             <div class="col">
                                 <a href="{% url 'a1:prod_detail' pk=product.pk %}" class="btn btn-danger btn-block">Rs{{product.price}}</a>
                             </div>
-                            <h5>Seller</h5>:- {{product.user.business.name}}
+                            
                             <div class="col">
                                 <a href="{%url 'a1:createcart' pk=product.pk %}" class="btn btn-success btn-block">Add to cart</a>
                             </div>

@@ -1,0 +1,43 @@
+{% extends "a1/base.html" %}
+{% block content %}
+<div class="jumbotron">
+    <div class="container">
+        <h1>Your Products</h1>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+                      
+        
+        <div class="col">
+            <div class="row">
+                {%for product in product_list %}
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card" >
+                        <center><img class="card-img-top" src="{{product.image.url}}" alt="Card image cap" height="200" style="padding: 20px; width: 200px;" ></center>
+                        <div class="card-body">
+                            <h4 class="card-title"><a href="{% url 'a1:prod_detail' pk=product.pk %}" title="View Product">{{product.name}}</a></h4>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <b>Seller</b>:- {{product.user.business.name}}
+                            <div class="row">
+                                <div class="col">
+                                    <a href="{% url 'a1:prod_detail' pk=product.pk %}" class="btn btn-danger btn-block">Rs{{product.price}}</a>
+                                </div>
+                                
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {%endfor%}
+     
+           
+
+       
+              
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

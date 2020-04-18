@@ -31,7 +31,8 @@ urlpatterns = [
     path('bank_detail',views.BankDetailCreateView.as_view(),name="bank_detail"),
     path('prod_create',views.ProductCreateView.as_view(),name="prod_create"),
     path('cat_create',views.CategoryCreateView.as_view(),name="cat_create"),
-
-
+    path('your_products',views.SellerProducts.as_view(),name='your_products'),
+    path('bankup/<int:pk>',views.BankDetailUpdateView.as_view(),name='bankup'),
+    path('businessup/<int:pk>',views.BusinessUpdateView.as_view(),name='businessup')
 
 ]

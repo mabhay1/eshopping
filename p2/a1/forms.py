@@ -37,7 +37,7 @@ class UpdateForm(forms.ModelForm):
         )
     class Meta:
         model=UserProfile
-        fields=['username','first_name','last_name','phone_number','email']
+        fields=['username','first_name','last_name','phone_number','email','role']
 
 class ReviewForm(forms.ModelForm):
     class Meta:

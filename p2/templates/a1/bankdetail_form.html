@@ -1,5 +1,59 @@
-<form method="post">
-    {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit" value="submit">
-</form>
+{% extends "a1/base.html" %}
+
+
+{% load widget_tweaks %}
+{% block content %}
+<div class="container">
+    <div class="card bg-light">
+    <article class="card-body mx-auto" style="max-width: 400px;">
+        {% if heading == 'create' %}
+        <h4 class="card-title mt-3 text-center">Create Bank Detail</h4>
+        {% else %}
+        <h4 class="card-title mt-3 text-center">Update Bank Detail</h4>
+        {% endif %}
+        
+      
+        <form method="post">
+            {% csrf_token %}
+        <div class="form-group input-group">
+            <div class="input-group-prepend col-md-6">
+                <label for="id_adhar_no" >Adhar Number</label>
+             </div>
+            
+            {% render_field form.adhar_no class="form-control col-md-6" %}
+        </div> <!-- form-group// -->
+        <div class="form-group input-group">
+            <div class="input-group-prepend col-md-6">
+                <label for="id_pan_no">Pan Number</label>
+             </div>
+           
+            {% render_field form.pan_no class="form-control col-md-6"  %}
+        </div>
+        <div class="form-group input-group">
+            <div class="input-group-prepend col-md-6">
+                <label for="id_account_no">Account Number</label>
+             </div>
+            
+            {% render_field form.account_no class="form-control col-md-6" %}
+        </div>
+       
+  
+  
+         
+        {% if heading == 'create' %}                              
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block"> Create  </button>
+        </div> <!-- form-group// -->   
+        {% else %}
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block"> Update </button>
+        </div>
+        {% endif %}   
+                                                                  
+    </form>
+
+
+
+</div>
+</div>
+{% endblock %}

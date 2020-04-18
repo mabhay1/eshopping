@@ -32,6 +32,8 @@ class BusinessDetail(models.Model):
 
     def __str__(self):
         return f'{self.user.username} {self.name}'
+    def get_absolute_url(self):
+        return reverse('a1:profile',kwargs={'pk':self.user.pk})        
 
 class BankDetail(models.Model):
     user=models.OneToOneField(UserProfile,on_delete=models.CASCADE,related_name="bank")
@@ -41,7 +43,8 @@ class BankDetail(models.Model):
 
     def __str__(self):
         return f'{self.user.username}'
-
+    def get_absolute_url(self):
+        return reverse('a1:profile',kwargs={'pk':self.user.pk})
 
 
 
