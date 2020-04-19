@@ -184,8 +184,9 @@
                                             <p>{{userprofile.business.zip_code}}</p>
                                         </div>
                                     </div>
+                                    {% if userprofile.business%}
                                 <a class="btn btn-warning" href="{% url 'a1:businessup' pk=userprofile.business.pk %}">Update</a>
-                         
+                         {%endif%}
                         </div>
                         <div class="tab-pane fade" id="profile1" role="tabpanel" aria-labelledby="profile1-tab">
                             <div class="row">
@@ -212,8 +213,9 @@
                                     <p>{{userprofile.bank.account_no}}</p>
                                 </div>
                             </div>
+                            {% if userprofile.bank %}
                             <a class="btn btn-warning" href="{% url 'a1:bankup' pk=userprofile.bank.pk %}">Update</a>
-                           
+                           {%endif%}
                  
                 </div>
                     </div>
