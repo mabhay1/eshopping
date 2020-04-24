@@ -10,19 +10,7 @@
     {{form.errors}}
   </div>
   {%endif%}
-<!-- <div class="container">
-    <br>
-    <br>
-<h3>{{product.name}}</h3><br>
 
-<img src="{{product.image.url}}" alt="image not displayed" height='250' width="250">
-<div class="container">
-<strong> Price:- Rs {{product.price}}</strong><br>
-{{product.description}}
-
-</div>
-<a href="{%url 'a1:createcart' pk=product.pk %}" class="btn btn-primary" >Add to Cart</a>
-</div> -->
 <div class="container">
     <div class="card">
         <div class="container-fliud">
@@ -73,8 +61,9 @@
                         <span class="color blue"></span>
                     </h5>
                     <div class="action">
-                        <a href="{%url 'a1:createcart' pk=product.pk %}" class="add-to-cart btn btn-default" type="button">add to cart</a>
-                        <button class="like btn btn-default" type="button"><span class="fa fa-heart"></span></button>
+                        
+                        <button class="likebutton add-to-cart btn btn-default" id="like{{ product.id }}"  data-catid="{{ product.id }}" >Add to Cart</button>
+                        
                     </div>
                 </div>
             </div>
@@ -108,3 +97,35 @@
 
 
 {% endblock %}
+{% block js %}
+<script type="text/javascript"> 
+$('.likebutton').click(function(){ 
+    var id; 
+    id = $(this).attr("data-catid"); 
+    $.ajax( 
+    { 
+        type:"GET", 
+        url: "{%url 'a1:createcart' %}", 
+        data:{ 
+                 p_id: id 
+    }, 
+    success: function( data ) 
+    { 
+  
+      if(data.authenticated==1){ 
+        $('#cart-qty').attr( "data-count", data.quantity);
+        alert(data.p_qty+"quantity of"+data.p_name+" is added to cart");}
+      else{
+          alert("login first")
+  
+  
+  
+                  
+      }
+  
+        },
+    error: function(rs,e){
+        console.log(rs.responseText);
+    }
+    }) });</script>
+  {%endblock%}

@@ -58,7 +58,8 @@
                                 </div>
                                 
                                 <div class="col">
-                                    <a href="{%url 'a1:createcart' pk=product.pk %}" class="btn btn-success btn-block">Add to cart</a>
+                                    
+                                    <button class="likebutton btn btn-success btn-block" id="like{{ product.id }}"  data-catid="{{ product.id }}" >Add to Cart</button>
                                 </div>
                             </div>
                         </div>
@@ -78,3 +79,35 @@
 
 
 {% endblock %}
+{% block js %}
+<script type="text/javascript"> 
+$('.likebutton').click(function(){ 
+    var id; 
+    id = $(this).attr("data-catid"); 
+    $.ajax( 
+    { 
+        type:"GET", 
+        url: "{%url 'a1:createcart' %}", 
+        data:{ 
+                 p_id: id 
+    }, 
+    success: function( data ) 
+    { 
+  
+      if(data.authenticated==1){ 
+        $('#cart-qty').attr( "data-count", data.quantity);
+        alert(data.p_qty+"quantity of"+data.p_name+" is added to cart");}
+      else{
+          alert("login first")
+  
+  
+  
+                  
+      }
+  
+        },
+    error: function(rs,e){
+        console.log(rs.responseText);
+    }
+    }) });</script>
+  {%endblock%}

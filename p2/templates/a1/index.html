@@ -98,7 +98,7 @@ background-color:#FF7600;
   
   
 {% block content %}
-
+ 
 {% if products %}
 
 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
@@ -121,7 +121,8 @@ background-color:#FF7600;
           <h1>{{products.0.name}}</h1>
             <h2>Rs {{products.0.price}}</h2>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
-            <a href="{%url 'a1:createcart' pk=products.0.pk %}" class="btn btn-primary" style="width: 130px;">Add to Cart</a>
+            
+            <button class="likebutton btn btn-primary" id="like{{ products.0.pk }}"  data-catid="{{ products.0.pk }}" style="width: 130px;">Add to Cart</button>
       </div>
       
       <div class="col-sm-6" >
@@ -142,7 +143,8 @@ background-color:#FF7600;
           <h1>{{product.name}}</h1>
             <h2>Rs {{product.price}}</h2>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
-            <a href="{%url 'a1:createcart' pk=product.pk %}" class="btn btn-primary" style="width: 130px;">Add to Cart</a>
+            
+            <button class="likebutton btn btn-primary" id="like{{ product.id }}"  data-catid="{{ product.id }}" style="width: 130px;">Add to Cart</button>
       </div>
       <div class="col-sm-6">
         <img src='{{product.image.url}}'  alt="" />
@@ -189,7 +191,7 @@ background-color:#FF7600;
                   <p class="bloc_left_price">99.00 $</p>
               </div>
           </div>
-      </div>
+      </div> 
 
       <div class="col">
         {% for category in category_list%}
@@ -209,7 +211,8 @@ background-color:#FF7600;
                             </div>
                             
                             <div class="col">
-                                <a href="{%url 'a1:createcart' pk=product.pk %}" class="btn btn-success btn-block">Add to cart</a>
+                                
+                                <button class="likebutton btn btn-success btn-block" id="like{{ product.id }}"  data-catid="{{ product.id }}" >Add to Cart</button>
                             </div>
                         </div>
                     </div>
@@ -227,4 +230,36 @@ background-color:#FF7600;
 </div>
 {% endif %}
 {%endblock%}
+{% block js %}
+<script type="text/javascript"> 
+$('.likebutton').click(function(){ 
+    var id; 
+    id = $(this).attr("data-catid"); 
+    $.ajax( 
+    { 
+        type:"GET", 
+        url: "{%url 'a1:createcart' %}", 
+        data:{ 
+                 p_id: id 
+    }, 
+    success: function( data ) 
+    { 
+  
+      if(data.authenticated==1){ 
+        $('#cart-qty').attr( "data-count", data.quantity);
+        alert(data.p_qty+"quantity of"+data.p_name+" is added to cart");}
+      else{
+          alert("login first")
+  
+  
+  
+                  
+      }
+  
+        },
+    error: function(rs,e){
+        console.log(rs.responseText);
+    }
+    }) });</script>
+  {%endblock%}
 

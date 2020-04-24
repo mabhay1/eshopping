@@ -8,7 +8,9 @@ from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.views import LoginView,LogoutView
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,HttpResponse,JsonResponse
+from django.contrib.auth.decorators import login_required
+import json
 # Create your views here.
 class SellerProducts(LoginRequiredMixin,ListView):
     model=Product
@@ -167,20 +169,7 @@ class ProductCreateView(CreateView):
         if 'image' in self.request.FILES:
             self.object.image=self.request.FILES['image']
         return super().form_valid(form) 
-# def add_product(request):
-#     if request.method=='POST':
-#         product_form=ProductCreateForm(data=request.POST)
-        
-#         if product_form.is_valid():
-#             user_profile=UserProfile.objects.get(username=request.user.username)
-#             prod=product_form.save(commit=False)
-#             prod.user_id=user_profile.user_ptr_id
-#             if 'image' in request.FILES:
-#                 prod.image=request.FILES['image']
-#             prod.save()
-#     else:
-#         product_form=ProductCreateForm()
-#     return render(request,'a1/product_form.html',{'form':product_form}) 
+
 
 class Products(DetailView):
     model=Category
@@ -188,37 +177,40 @@ class Products(DetailView):
 class ProductDetail(DetailView):
     model=Product    
 
-class CreateCart(LoginRequiredMixin,RedirectView):
-    login_url='login'
-    def get_redirect_url(self,*args,**kwargs):
-        return reverse('home')
-
-    def get(self,request,*args,**kwargs):
-        user_profile=UserProfile.objects.get(username=self.request.user.username)
+def createcart(request):
+    if request.method == 'GET':
         
-        var1=CartVariable.objects.get_or_create(user_id=user_profile.user_ptr_id)[0]
-        product=get_object_or_404(Product,pk=self.kwargs.get('pk'))
         
-        if product.id in list(map(lambda x:x.product_id,Cart.objects.filter(user_id=user_profile.user_ptr_id,product=product))):
-            c=Cart.objects.get(user_id=user_profile.user_ptr_id,product=product)
-            c.quantity=c.quantity+1
-            c.total_price=c.total_price+product.price
-            c.save()
- 
-           
-     
-        else:
-            c=Cart.objects.create(user_id=user_profile.user_ptr_id,product=product,total_price=product.price)
-        var1.total_qty=var1.total_qty+1
-        var1.total_price=var1.total_price+product.price
-        var1.save()
-        messages.success(self.request,f' {c.quantity} quantity of {product.name} is added to cart ')
+        try:
+            user_profile=UserProfile.objects.get(username=request.user.username)
+            var1=CartVariable.objects.get_or_create(user_id=user_profile.user_ptr_id)[0]
+            p_id=request.GET['p_id']
+            product=get_object_or_404(Product,pk=p_id)
+                    
+            if product.id in list(map(lambda x:x.product_id,Cart.objects.filter(user_id=user_profile.user_ptr_id,product=product))):
+                c=Cart.objects.get(user_id=user_profile.user_ptr_id,product=product)
+                c.quantity=c.quantity+1
+                c.total_price=c.total_price+product.price
+                c.save()
             
-        return super().get(request,*args,**kwargs)
+                    
+                
+            else:
+                c=Cart.objects.create(user_id=user_profile.user_ptr_id,product=product,total_price=product.price)
+            var1.total_qty=var1.total_qty+1
+            var1.total_price=var1.total_price+product.price
+            var1.save()
+            
+            return JsonResponse({'quantity':var1.total_qty,'authenticated':1,'p_qty':c.quantity,'p_name':product.name})
+        except:
+            return HttpResponse(json.dumps({'authenticated':0}))    
+            
+        
 
 class DisplayCart(LoginRequiredMixin,ListView):
     login_url='login'
     model=Cart
+    
     def get_queryset(self):
         queryset=super().get_queryset()
         user_profile=UserProfile.objects.get(username=self.request.user.username)
@@ -239,27 +231,31 @@ class DisplayCart(LoginRequiredMixin,ListView):
         context['price_total']=cart4.total_price
         return context   
 
-class UpdateCart(LoginRequiredMixin,RedirectView):
-    login_url='login'
-    def get_redirect_url(self,*args,**kwargs):
-        return reverse('a1:displaycart')    
-    def post(self,request,*args,**kwargs):
-        user_profile=UserProfile.objects.get(username=self.request.user.username)
+
+
+def updatecart(request):
+    
+        user_profile=UserProfile.objects.get(username=request.user.username)
         var3=CartVariable.objects.get(user_id=user_profile.user_ptr_id)
-        cart1=Cart.objects.get(id=self.kwargs.get('pk'))
-        cart1.quantity=int(self.request.POST.get('qty'))
-    
+        cart1=Cart.objects.get(id=request.GET.get('cat_id'))
+        cart1.quantity=int(request.GET.get('q'))
+        
         cart1.total_price=cart1.quantity*(cart1.product.price)
-    
+        
         cart1.save()
-        messages.success(self.request,'the cart is updated')
+        
         var3.total_qty=0
         var3.total_price=0
         for qnty in Cart.objects.filter(user_id=user_profile.user_ptr_id):
             var3.total_qty=var3.total_qty+qnty.quantity
             var3.total_price=var3.total_price+qnty.total_price
         var3.save()
-        return super().post(request,*args,**kwargs)  
+        return JsonResponse({'quantity':var3.total_qty,'p_qty':cart1.quantity,'p_price':cart1.total_price,'tprice':var3.total_price})
+        
+    
+ 
+
+
 
 class DeleteCartItem(LoginRequiredMixin,RedirectView):
     login_url="login"

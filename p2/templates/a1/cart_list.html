@@ -3,42 +3,14 @@
 {% block content %}
 
 <div class="container">
-     <!-- <br>
-     {%if qty > 0 %}
-     cart contains {{qty}} items
-     total price-{{price_total}}
-     
-     <a href="{% url 'a1:placeorder' %}" class='btn btn-primary'>Place Order</a>
-     {% else %}
-     <h3>The Cart is Empty</h3>
-     {%endif%}
-
-    {%for cart in cart_list %}
-    <div class="jumbotron">
-    <h3>{{cart.product.name}}</h3>
-    <img src="{{cart.product.image.url}}" height="200" width="200">
     
-    <form method='post' action="{% url 'a1:updatecart' pk=cart.pk %}">
-    {% csrf_token %}    
-    <input type="number" min="0" name='qty' placeholder=" enter quantity">
-    <input type="Submit" value="update" class="btn btn-warning">
-    </form>
-    <br>
-    total price= {{cart.total_price}}
-    quantity-{{cart.quantity}}
-       
-    <a href="{% url 'a1:deletecartitem' pk=cart.pk %}" class="btn btn-danger">Delete</a>
-
-    </div>
-    <br><br>
-    {% endfor %} -->
     <section class="jumbotron text-center">
         <div class="container">
             <h1 class="jumbotron-heading">E-COMMERCE CART</h1>
          </div>
     </section>
     {%if qty > 0 %}
-    <H2>cart contains {{qty}} items
+    <H2 id="head-cart">cart contains {{qty}} items
     total price-{{price_total}}</H2>
     
     
@@ -54,7 +26,7 @@
                             <tr>
                                 <th scope="col"> </th>
                                 <th scope="col">Product</th>
-                                <!-- <th scope="col">Available</th> -->
+                                
                                 <th scope="col" class="text-center">Quantity</th>
                                 <th ></th>
                                 <th scope="col" class="text-right">Price</th>
@@ -68,21 +40,21 @@
                                 <td><img src="{{cart.product.image.url}}" height="50" width="50" /> </td>
                                 <td>{{cart.product.name}}</td>
                                 <td>
-                                    <form method='post' action="{% url 'a1:updatecart' pk=cart.pk %}" id="myForm">
-                                        {% csrf_token %}    
-                                        <input type="number" min="1" name='qty' class="form-control" value="{{cart.quantity}}">
-                                        <!-- <input type="Submit" value="update" class="btn btn-warning"> -->
-                                    
+                        
+                                        <form  id="myform{{cart.id}}"  class="form1" >
+                                            
+                                            
+                                        <input type="number" id="{{cart.id}}" min="1"  class="form-control" value="{{cart.quantity}}" >
                                         
+                                    
+                                        </form>
                                 </td>
-                                <!-- <td><input class="form-control" type="text" value="1" /></td> -->
+                                
                                 <td class="text-right">
-                                    <button type="submit" class="btn btn-sm btn-warning" id="myButton">
-                                    <i class="fa fa-shopping-cart"></i> 
-                                </button> 
-                            </form>
+                                    
+                        
                                 </td>
-                                <td class="text-right">Rs {{cart.total_price}}</td>
+                                <td id="price{{cart.id}}" class="text-right">Rs {{cart.total_price}}</td>
                                 
                                 <td class="text-right"><a href="{% url 'a1:deletecartitem' pk=cart.pk %}" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </a> </td>
                             </tr>
@@ -96,7 +68,7 @@
                                 <td></td>
                                 <td></td>
                                 <td><strong>Total</strong></td>
-                                <td class="text-right"><strong>Rs {{price_total}}</strong></td>
+                                <td class="text-right"><strong id="ptotal">Rs {{price_total}}</strong></td>
                             </tr>
                         </tbody>
                     </table>
@@ -128,3 +100,49 @@
 {%endif%}
 
 {% endblock %}
+{% block js %}
+<script type="text/javascript"> 
+$('input[type="number"]').change(function(){
+    
+    
+    var id;
+    var id=$(this).attr('id');
+    console.log($(this).val())
+$('#myform'+id).submit(function(e){
+    e.preventDefault();
+    
+    
+    $.ajax({
+        
+        type: 'GET',
+        url:"{% url 'a1:updatecart' %}",
+        data:{
+        
+            q:$('#'+id).val(),
+            cat_id:id
+            
+        }, 
+        success: function( data ){
+            $('#cart-qty').attr( "data-count", data.quantity);
+            $('#price'+id).text("Rs"+data.p_price);
+            $('#'+id).attr('value',data.p_qty);
+            $('#head-cart').text("cart contains "+ data.quantity+ " items total price-"+ data.tprice)
+            $('#ptotal').text("Rs "+data.tprice)
+           
+        },
+        error: function(rs,e){
+           console.log(rs.responseText);
+    }
+        
+
+    }
+    )
+}
+)
+
+
+
+       
+})
+</script>
+  {%endblock%}
